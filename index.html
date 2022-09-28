@@ -19,10 +19,73 @@
     </div>
   </div>
 
+  <div class="container my-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <h3>Students</h3>
+          <button class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#createStudentModal">Create student</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" tabindex="-1" id="createStudentModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Create Student</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <form action="">
+            <div class="my-3">
+              <label for="">First Name</label>
+              <input type="text" name="firstName" id="firstName" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">Last Name</label>
+              <input type="text" name="lastName" id="lastName" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">Email</label>
+              <input type="text" name="email" id="email" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">Country</label>
+              <input type="text" name="country" id="country" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">City</label>
+              <input type="text" name="city" id="city" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">Birthday</label>
+              <input type="date" name="birthdate" id="birthdate" class="form-control">
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveStudent">Save</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" 
           integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" 
           crossorigin="anonymous">
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="/scripts/config.js"></script>
+  <script src="/scripts/app.js"></script>
 </body>
 </html>
