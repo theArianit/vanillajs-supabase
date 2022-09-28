@@ -1,4 +1,4 @@
 const config = new Config();
 
-const supabase = supabase.createClient(config.supabaseURI, config.key);
+var supabase = supabase.createClient(config.supabaseURI, config.supabaseKey);
 console.log('supabase: ', supabase);
