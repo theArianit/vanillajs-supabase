@@ -1,4 +1,4 @@
 const config = new Config();
 
-console.log('config key: ', config.key);
-console.log('config uri: ', config.supabaseURI);
+const supabase = supabase.createClient(config.supabaseURI, config.key);
+console.log('supabase: ', supabase);
