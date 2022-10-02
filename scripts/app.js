@@ -13,8 +13,6 @@ saveStudent.addEventListener('click', async (e) => {
   let city = document.querySelector('#city').value;
   let birthdate = document.querySelector('#birthdate').value;
 
-  console.log(`${firstName} ${lastName} ${email} ${country} ${city} ${birthdate}`);
-
   saveStudent.innerHTML = "Saving...";
   saveStudent.setAttribute('disabled', true);
 
@@ -26,9 +24,7 @@ saveStudent.addEventListener('click', async (e) => {
     Birthdate: birthdate
   });
 
-  console.log('reasult: ', result);
   if(result){
-    console.log('result true');
     saveStudent.innerHTML = "Save";
     saveStudent.setAttribute('disabled', false);
     const modalBody = document.querySelector('#createStudentModal');
