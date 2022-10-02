@@ -32,6 +32,26 @@
     </div>
   </div>
 
+  <div class="container">
+    <div id="loading"></div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>County</th>
+            <th>City</th>
+            <th>Birthdate</th>
+          </tr>
+        </thead>
+        <tbody id="tBody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="modal fade" tabindex="-1" id="createStudentModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -42,7 +62,7 @@
         </div>
 
         <div class="modal-body">
-          <form action="">
+          <!-- <form action=""> -->
             <div class="my-3">
               <label for="">First Name</label>
               <input type="text" name="firstName" id="firstName" class="form-control">
@@ -67,12 +87,12 @@
               <label for="">Birthday</label>
               <input type="date" name="birthdate" id="birthdate" class="form-control">
             </div>
-          </form>
+          <!-- </form> -->
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveStudent">Save</button>
+          <button type="submit" class="btn btn-primary" id="saveStudent">Save</button>
         </div>
 
       </div>
