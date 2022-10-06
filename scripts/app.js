@@ -49,16 +49,20 @@ const getStudens = async () => {
   if(studentsResult.status === 200 && studentsResult.data.length > 0 && studentsResult.error === null){
     loading.innerText = '';
     studentsResult.data.forEach(student => {
-      tr = `<td>${student.id}</td>
+      tr = `<tr>
+      <td>${student.id}</td>
       <td>${student.FirstName}</td>
       <td>${student.LastName}</td>
       <td>${student.Email}</td>
       <td>${student.Country}</td>
       <td>${student.City}</td>
-      <td>${student.Birthdate}</td>`
-    });
+      <td>${student.Birthdate}</td>
+      <td><button class="btn btn-primary">Edit</button>
+      <button class="btn btn-danger">Delete</button></td>
+      </tr>`
 
-    tabBody.innerHTML = tr;
+      tabBody.innerHTML += tr;
+    });
   } else{
     loading.innerText = 'No students registered';
   }
