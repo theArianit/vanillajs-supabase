@@ -42,7 +42,7 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
-            <th>County</th>
+            <th>Country</th>
             <th>City</th>
             <th>Birthdate</th>
           </tr>
@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <div class="modal fade" tabindex="-1" id="createStudentModal">
+  <div class="modal fade" id="createStudentModal">
     <div class="modal-dialog">
       <div class="modal-content">
 
@@ -99,7 +99,55 @@
     </div>
   </div>
   
+  <div class="modal fade" id="editStudentModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
 
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Student</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- <form action=""> -->
+            <div class="my-3">
+              <label for="">ID: <span>1</span></label>
+            </div>
+            <div class="my-3">
+              <label for="">First Name</label>
+              <input type="text" name="editFirstName" id="editFirstName" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">Last Name</label>
+              <input type="text" name="editLastName" id="editLastName" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">Email</label>
+              <input type="text" name="editEmail" id="editEmail" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">Country</label>
+              <input type="text" name="editCountr" id="editCountry" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">City</label>
+              <input type="text" name="editCity" id="editCity" class="form-control">
+            </div>
+            <div class="my-3">
+              <label for="">Birthday</label>
+              <input type="date" name="editBirthdate" id="editBirthdate" class="form-control">
+            </div>
+          <!-- </form> -->
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="editStudent">Save</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" 

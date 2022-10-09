@@ -1,8 +1,8 @@
 const config = new Config();
 const saveStudent = document.querySelector('#saveStudent');
+const editStudent = document.querySelector('#editStudent');
 
 const supabasedb = supabase.createClient(config.supabaseURI, config.supabaseKey);
-
 
 saveStudent.addEventListener('click', async (e) => {
   e.preventDefault();
@@ -20,6 +20,7 @@ saveStudent.addEventListener('click', async (e) => {
     FirstName: firstName,
     LastName: lastName,
     Country: country,
+    Email: email,
     City: city,
     Birthdate: birthdate
   });
@@ -57,7 +58,7 @@ const getStudens = async () => {
       <td>${student.Country}</td>
       <td>${student.City}</td>
       <td>${student.Birthdate}</td>
-      <td><button class="btn btn-primary">Edit</button>
+      <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editStudentModal">Edit</button>
       <button class="btn btn-danger">Delete</button></td>
       </tr>`
 
