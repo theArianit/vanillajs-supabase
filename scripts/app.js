@@ -16,7 +16,7 @@ saveStudent.addEventListener('click', async (e) => {
   saveStudent.innerHTML = "Saving...";
   saveStudent.setAttribute('disabled', true);
 
-  const result = supabasedb.from("Student").insert({
+  const result = await supabasedb.from("Student").insert({
     FirstName: firstName,
     LastName: lastName,
     Country: country,
@@ -25,7 +25,7 @@ saveStudent.addEventListener('click', async (e) => {
     Birthdate: birthdate
   });
 
-  if(result){
+  if(result && result.status === 201){
     saveStudent.innerHTML = "Save";
     saveStudent.setAttribute('disabled', false);
     const modalBody = document.querySelector('#createStudentModal');
