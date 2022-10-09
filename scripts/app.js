@@ -1,6 +1,10 @@
 const config = new Config();
 const modalCreateStudent = document.querySelector('#createStudentModal');
+const modalEditStudent = document.querySelector('#editStudentModal');
 const modalBootStrapCreateStudent = new bootstrap.Modal(modalCreateStudent);
+const modalBootStrapEditStudent = new bootstrap.Modal(modalEditStudent);
+const saveStudent = document.querySelector('#saveStudent');
+const editStudent = document.querySelector('#editStudent');
 
 const supabasedb = supabase.createClient(config.supabaseURI, config.supabaseKey);
 
@@ -28,7 +32,10 @@ const getStudens = async () => {
       <td>${student.Country}</td>
       <td>${student.City}</td>
       <td>${student.Birthdate}</td>
-      <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editStudentModal">Edit</button>
+      <td><button class="btn btn-primary" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#editStudentModal"
+                  onclick='getEditStudent(${student.id})'>Edit</button>
       <button class="btn btn-danger">Delete</button></td>
       </tr>`
 
@@ -75,5 +82,76 @@ saveStudent.addEventListener('click', async (e) => {
     getStudens();
   } else{
     alert('error while trying to save student');
+  }
+});
+
+let editStudentId = document.getElementById('spanStudentId');
+let editFirstName = document.querySelector('#editFirstName');
+let editLastName = document.querySelector('#editLastName');
+let editEmail = document.querySelector('#editEmail');
+let editCountry = document.querySelector('#editCountry');
+let editCity = document.querySelector('#editCity');
+let editBirthday = document.querySelector('#editBirthdate');
+
+const getEditStudent = async (id) => {
+  const inputs = modalEditStudent.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.value = '';
+    });
+  
+  const editResult = await supabasedb.from("Student")
+                                     .select("*")
+                                     .eq("id", id);
+
+  if(editResult && editResult.status === 200){
+    editStudentId.innerText = id;
+    editFirstName.value = editResult.data[0].FirstName;
+    editLastName.value = editResult.data[0].LastName;
+    editEmail.value = editResult.data[0].Email;
+    editCountry.value = editResult.data[0].Country;
+    editCity.value = editResult.data[0].City;
+    editBirthday.value = editResult.data[0].Birthdate;
+  }
+  else{    
+    modalBootStrapEditStudent.hide();
+  }
+};
+
+editStudent.addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  editStudent.innerHTML = "Saving...";
+  editStudent.setAttribute('disabled', true);
+  const studentId = editStudentId.innerText;
+  const fName = editFirstName.value;
+  const lName = editLastName.value;
+  const email = editEmail.value;
+  const country = editCountry.value;
+  const city = editCity.value;
+  const birthday = editBirthday.value;
+
+  const updateRes = await supabasedb.from("Student")
+                                    .update({
+                                        FirstName: fName,
+                                        LastName: lName,
+                                        Birthdate: birthday,
+                                        Email: email,
+                                        City: city,
+                                        Country: country
+                                      })
+                                    .match({id: studentId});
+
+  console.log('updateRes: ', updateRes);
+  if(updateRes.status === 200){
+    editStudent.innerHTML = "Save";
+    editStudent.setAttribute('disabled', false);    
+    const inputs = modalEditStudent.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.value = '';
+    });
+    modalBootStrapEditStudent.hide();
+    getStudens();
+  } else{
+    alert('error while trying to edit the student');
   }
 });
