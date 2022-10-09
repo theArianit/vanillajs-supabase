@@ -1,8 +1,44 @@
 const config = new Config();
-const saveStudent = document.querySelector('#saveStudent');
-const editStudent = document.querySelector('#editStudent');
+const modalCreateStudent = document.querySelector('#createStudentModal');
+const modalBootStrapCreateStudent = new bootstrap.Modal(modalCreateStudent);
 
 const supabasedb = supabase.createClient(config.supabaseURI, config.supabaseKey);
+
+const getStudens = async () => {
+  const tabBody = document.getElementById('tBody');
+  const loading = document.getElementById('loading');
+  let tr = "";
+
+  loading.innerText = 'Loading...';
+
+  const studentsResult = await supabasedb.from('Student')
+                                         .select('*')
+                                         .order('FirstName')
+                                         .order('LastName')
+                                         .order('id');
+
+  if(studentsResult.status === 200 && studentsResult.data.length > 0 && studentsResult.error === null){
+    loading.innerText = '';
+    studentsResult.data.forEach(student => {
+      tr = `<tr>
+      <td>${student.id}</td>
+      <td>${student.FirstName}</td>
+      <td>${student.LastName}</td>
+      <td>${student.Email}</td>
+      <td>${student.Country}</td>
+      <td>${student.City}</td>
+      <td>${student.Birthdate}</td>
+      <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editStudentModal">Edit</button>
+      <button class="btn btn-danger">Delete</button></td>
+      </tr>`
+
+      tabBody.innerHTML += tr;
+    });
+  } else{
+    loading.innerText = 'No students registered';
+  }
+}
+getStudens();
 
 saveStudent.addEventListener('click', async (e) => {
   e.preventDefault();
@@ -27,46 +63,17 @@ saveStudent.addEventListener('click', async (e) => {
 
   if(result && result.status === 201){
     saveStudent.innerHTML = "Save";
-    saveStudent.setAttribute('disabled', false);
-    const modalBody = document.querySelector('#createStudentModal');
-    const inputs = modalBody.querySelectorAll('input');
+    saveStudent.setAttribute('disabled', false);    
+    const inputs = modalCreateStudent.querySelectorAll('input');
     inputs.forEach(input => {
       input.value = '';
     });
+    // const closeModal = modalCreateStudent.querySelector('#closeCreateStudentModal');
+    // closeModal.click();
+
+    modalBootStrapCreateStudent.hide();
+    getStudens();
   } else{
     alert('error while trying to save student');
   }
 });
-
-const getStudens = async () => {
-  const tabBody = document.getElementById('tBody');
-  const loading = document.getElementById('loading');
-  let tr = "";
-
-  loading.innerText = 'Loading...';
-
-  const studentsResult = await supabasedb.from('Student').select('*');
-
-  if(studentsResult.status === 200 && studentsResult.data.length > 0 && studentsResult.error === null){
-    loading.innerText = '';
-    studentsResult.data.forEach(student => {
-      tr = `<tr>
-      <td>${student.id}</td>
-      <td>${student.FirstName}</td>
-      <td>${student.LastName}</td>
-      <td>${student.Email}</td>
-      <td>${student.Country}</td>
-      <td>${student.City}</td>
-      <td>${student.Birthdate}</td>
-      <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editStudentModal">Edit</button>
-      <button class="btn btn-danger">Delete</button></td>
-      </tr>`
-
-      tabBody.innerHTML += tr;
-    });
-  } else{
-    loading.innerText = 'No students registered';
-  }
-}
-
-getStudens();
