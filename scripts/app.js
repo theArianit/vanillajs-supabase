@@ -141,7 +141,6 @@ editStudent.addEventListener('click', async (e) => {
                                       })
                                     .match({id: studentId});
 
-  console.log('updateRes: ', updateRes);
   if(updateRes.status === 200){
     editStudent.innerHTML = "Save";
     editStudent.setAttribute('disabled', false);    
