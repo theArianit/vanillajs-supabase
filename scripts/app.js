@@ -22,7 +22,6 @@ const getStudens = async () => {
                                          .order('FirstName')
                                          .order('LastName')
                                          .order('id');
-  console.log('getstudents5');
 
   if(studentsResult.status === 200 && studentsResult.data.length > 0 && studentsResult.error === null){
     loading.innerText = '';
@@ -87,7 +86,7 @@ saveStudent.addEventListener('click', async (e) => {
     alert('error while trying to save student: ');
   }
   saveStudent.innerHTML = "Saving...";
-  saveStudent.setAttribute('disabled', false);
+  saveStudent.removeAttribute('disabled');
 });
 
 let editStudentId = document.getElementById('spanStudentId');
@@ -156,9 +155,9 @@ editStudent.addEventListener('click', async (e) => {
    // editToast.show();
     getStudens();
   } else{
-    console.log('updateRes: ', updateRes);
     alert('error while trying to edit the student');
   }
   editStudent.innerHTML = "Update";
-  editStudent.setAttribute('disabled', false);
+  // editStudent.setAttribute('disabled', false);
+  editStudent.removeAttribute('disabled');
 });
