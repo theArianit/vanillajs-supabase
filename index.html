@@ -110,7 +110,7 @@
 
         <div class="modal-body">
           <!-- <form action=""> -->
-            <div class="my-3">
+            <div class="my-1">
               <label for="" id="studentId">Student ID: <span id="spanStudentId"></span></label>
               <!-- <input type="hidden" name="editId" id="editId"> -->
             </div>
@@ -150,10 +150,34 @@
     </div>
   </div>
 
+  <div class="modal fade" id="deleteStudentModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Student</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="my-1">
+              <label for="" id="studentId">Are you sure you want to delete Student with ID: <span id="spanDeleteStudentId"></span></label>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="deleteStudent">Delete</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <div class="toast position-fixed bottom-0 end-0 p-3" role="alert" aria-live="assertive" aria-atomic="true" id="editStudentToast">
     <div class="d-flex">
       <div class="toast-body">
-        Student Updated Successfully
+        <label id="toastSpan">Placeholder</label>
       </div>
       <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>

@@ -1,11 +1,16 @@
 const config = new Config();
 const modalCreateStudent = document.querySelector('#createStudentModal');
 const modalEditStudent = document.querySelector('#editStudentModal');
+const modalDeleteStudent = document.querySelector('#deleteStudentModal');
 const modalBootStrapCreateStudent = new bootstrap.Modal(modalCreateStudent);
 const modalBootStrapEditStudent = new bootstrap.Modal(modalEditStudent);
+const modalBootStrapDeleteStudent = new bootstrap.Modal(modalDeleteStudent);
 const saveStudent = document.querySelector('#saveStudent');
 const editStudent = document.querySelector('#editStudent');
+const deleteStudent = document.querySelector('#deleteStudent');
 const editStudentSuccessToast = document.getElementById('editStudentToast');
+const editOrDeleteToast = new bootstrap.Toast(editStudentSuccessToast);
+const studentToastSpan = document.getElementById('toastSpan');
 
 const supabasedb = supabase.createClient(config.supabaseURI, config.supabaseKey);
 
@@ -38,7 +43,10 @@ const getStudens = async () => {
                   data-bs-toggle="modal" 
                   data-bs-target="#editStudentModal"
                   onclick='getEditStudent(${student.id})'>Edit</button>
-      <button class="btn btn-danger">Delete</button></td>
+      <button class="btn btn-danger"
+              data-bs-toggle="modal"
+              data-bs-target="#deleteStudentModal"
+              onclick='getDeleteStudent(${student.id})'>Delete</button></td>
       </tr>`
 
       tabBody.innerHTML += tr;
@@ -150,14 +158,43 @@ editStudent.addEventListener('click', async (e) => {
     inputs.forEach(input => {
       input.value = '';
     });
-    modalBootStrapEditStudent.hide();    
-    //const editToast = new bootstrap.Toast(editStudentSuccessToast);
-   // editToast.show();
+    modalBootStrapEditStudent.hide();
+    studentToastSpan.innerText = 'Student Updated Successfully';
     getStudens();
+    editOrDeleteToast.show();
   } else{
     alert('error while trying to edit the student');
   }
   editStudent.innerHTML = "Update";
   // editStudent.setAttribute('disabled', false);
   editStudent.removeAttribute('disabled');
+});
+
+let deleteStudentId = document.getElementById('spanDeleteStudentId');
+
+const getDeleteStudent = async (studId) => {
+  deleteStudentId.innerText = studId;
+};
+
+deleteStudent.addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  deleteStudent.innerHTML = "Deleting...";
+  deleteStudent.setAttribute('disabled', true);
+
+  const studId = deleteStudentId.innerText;
+  const deleteRes = await supabasedb.from("Student")
+                                    .delete()
+                                    .match({ id: studId });
+
+  if(deleteRes.error === null){
+    modalBootStrapDeleteStudent.hide();
+    getStudens();
+    studentToastSpan.innerText = 'Student Deleted Successfully';
+    editOrDeleteToast.show();
+  }else{
+    alert("Error while trying to delete student");
+  }
+  deleteStudent.innerHTML = 'Delete';
+  deleteStudent.removeAttribute('disabled');
 });
