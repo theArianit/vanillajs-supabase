@@ -5,6 +5,7 @@ const modalBootStrapCreateStudent = new bootstrap.Modal(modalCreateStudent);
 const modalBootStrapEditStudent = new bootstrap.Modal(modalEditStudent);
 const saveStudent = document.querySelector('#saveStudent');
 const editStudent = document.querySelector('#editStudent');
+const editStudentSuccessToast = document.getElementById('editStudentToast');
 
 const supabasedb = supabase.createClient(config.supabaseURI, config.supabaseKey);
 
@@ -12,6 +13,7 @@ const getStudens = async () => {
   const tabBody = document.getElementById('tBody');
   const loading = document.getElementById('loading');
   let tr = "";
+  tabBody.innerHTML = tr;
 
   loading.innerText = 'Loading...';
 
@@ -20,6 +22,7 @@ const getStudens = async () => {
                                          .order('FirstName')
                                          .order('LastName')
                                          .order('id');
+  console.log('getstudents5');
 
   if(studentsResult.status === 200 && studentsResult.data.length > 0 && studentsResult.error === null){
     loading.innerText = '';
@@ -69,8 +72,8 @@ saveStudent.addEventListener('click', async (e) => {
   });
 
   if(result && result.status === 201){
-    saveStudent.innerHTML = "Save";
-    saveStudent.setAttribute('disabled', false);    
+    // saveStudent.innerHTML = "Save";
+    // saveStudent.setAttribute('disabled', false);    
     const inputs = modalCreateStudent.querySelectorAll('input');
     inputs.forEach(input => {
       input.value = '';
@@ -81,8 +84,10 @@ saveStudent.addEventListener('click', async (e) => {
     modalBootStrapCreateStudent.hide();
     getStudens();
   } else{
-    alert('error while trying to save student');
+    alert('error while trying to save student: ');
   }
+  saveStudent.innerHTML = "Saving...";
+  saveStudent.setAttribute('disabled', false);
 });
 
 let editStudentId = document.getElementById('spanStudentId');
@@ -120,7 +125,7 @@ const getEditStudent = async (id) => {
 editStudent.addEventListener('click', async (e) => {
   e.preventDefault();
 
-  editStudent.innerHTML = "Saving...";
+  editStudent.innerHTML = "Updating...";
   editStudent.setAttribute('disabled', true);
   const studentId = editStudentId.innerText;
   const fName = editFirstName.value;
@@ -141,16 +146,19 @@ editStudent.addEventListener('click', async (e) => {
                                       })
                                     .match({id: studentId});
 
-  if(updateRes.status === 200){
-    editStudent.innerHTML = "Save";
-    editStudent.setAttribute('disabled', false);    
+  if(updateRes.error === null){
     const inputs = modalEditStudent.querySelectorAll('input');
     inputs.forEach(input => {
       input.value = '';
     });
-    modalBootStrapEditStudent.hide();
+    modalBootStrapEditStudent.hide();    
+    //const editToast = new bootstrap.Toast(editStudentSuccessToast);
+   // editToast.show();
     getStudens();
   } else{
+    console.log('updateRes: ', updateRes);
     alert('error while trying to edit the student');
   }
+  editStudent.innerHTML = "Update";
+  editStudent.setAttribute('disabled', false);
 });
