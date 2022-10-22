@@ -43,12 +43,12 @@ const addStudent = (student) => {
   let tr = "";
   tr = `<tr data-id="${student.id}">
       <td>${student.id}</td>
-      <td>${student.FirstName}</td>
-      <td>${student.LastName}</td>
-      <td>${student.Email}</td>
-      <td>${student.Country}</td>
-      <td>${student.City}</td>
-      <td>${student.Birthdate}</td>
+      <td data-firstname="${student.id}">${student.FirstName}</td>
+      <td data-lastname="${student.id}">${student.LastName}</td>
+      <td data-email="${student.id}">${student.Email}</td>
+      <td data-country="${student.id}">${student.Country}</td>
+      <td data-city="${student.id}">${student.City}</td>
+      <td data-birthdate="${student.id}">${student.Birthdate}</td>
       <td><button class="btn btn-primary" 
                   data-bs-toggle="modal" 
                   data-bs-target="#editStudentModal"
