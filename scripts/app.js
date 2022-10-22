@@ -11,11 +11,59 @@ const deleteStudent = document.querySelector('#deleteStudent');
 const editStudentSuccessToast = document.getElementById('editStudentToast');
 const editOrDeleteToast = new bootstrap.Toast(editStudentSuccessToast);
 const studentToastSpan = document.getElementById('toastSpan');
+const tabBody = document.getElementById('tBody');
 
 const supabasedb = supabase.createClient(config.supabaseURI, config.supabaseKey);
 
+const getRealtimeChanges = async() => {
+  const channel = supabasedb
+  .channel('table-db-changes')
+  .on(
+    'postgres_changes',
+    { event: '*', schema: 'public', table: 'Student' },
+    (payload) => {
+      if(payload.errors === null){
+        console.log('payload: ', payload);
+        if(payload.eventType === "INSERT"){
+          addStudent(payload.new);
+        }else if(payload.eventType === "UPDATE"){
+          editStudentRealTime(payload.new);
+        }else{
+          removeStudentFromList(payload.old.id);
+        }
+      }else{ alert('Some error happened while synchronizing the data from the server');}
+    } 
+  )
+  .subscribe();
+}
+
+getRealtimeChanges();
+
+const addStudent = (student) => {
+  let tr = "";
+  tr = `<tr data-id="${student.id}">
+      <td>${student.id}</td>
+      <td>${student.FirstName}</td>
+      <td>${student.LastName}</td>
+      <td>${student.Email}</td>
+      <td>${student.Country}</td>
+      <td>${student.City}</td>
+      <td>${student.Birthdate}</td>
+      <td><button class="btn btn-primary" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#editStudentModal"
+                  onclick='getEditStudent(${student.id})'>Edit</button>
+          <button class="btn btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteStudentModal"
+                  onclick='getDeleteStudent(${student.id})'>Delete</button></td>
+      </tr>`
+
+      tabBody.innerHTML += tr;
+}
+
 const getStudens = async () => {
-  const tabBody = document.getElementById('tBody');
+  // const tabBody = document.getElementById('tBody');
   const loading = document.getElementById('loading');
   let tr = "";
   tabBody.innerHTML = tr;
@@ -30,26 +78,28 @@ const getStudens = async () => {
 
   if(studentsResult.status === 200 && studentsResult.data.length > 0 && studentsResult.error === null){
     loading.innerText = '';
+    // let orderNr = 1;
     studentsResult.data.forEach(student => {
-      tr = `<tr>
+      tr = `<tr data-id="${student.id}">
       <td>${student.id}</td>
-      <td>${student.FirstName}</td>
-      <td>${student.LastName}</td>
-      <td>${student.Email}</td>
-      <td>${student.Country}</td>
-      <td>${student.City}</td>
-      <td>${student.Birthdate}</td>
+      <td data-firstname="${student.id}">${student.FirstName}</td>
+      <td data-lastname="${student.id}">${student.LastName}</td>
+      <td data-email="${student.id}">${student.Email}</td>
+      <td data-country="${student.id}">${student.Country}</td>
+      <td data-city="${student.id}">${student.City}</td>
+      <td data-birthdate="${student.id}">${student.Birthdate}</td>
       <td><button class="btn btn-primary" 
                   data-bs-toggle="modal" 
                   data-bs-target="#editStudentModal"
                   onclick='getEditStudent(${student.id})'>Edit</button>
-      <button class="btn btn-danger"
-              data-bs-toggle="modal"
-              data-bs-target="#deleteStudentModal"
-              onclick='getDeleteStudent(${student.id})'>Delete</button></td>
+          <button class="btn btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteStudentModal"
+                  onclick='getDeleteStudent(${student.id})'>Delete</button></td>
       </tr>`
 
       tabBody.innerHTML += tr;
+      // orderNr++;
     });
   } else{
     loading.innerText = 'No students registered';
@@ -105,8 +155,7 @@ let editCountry = document.querySelector('#editCountry');
 let editCity = document.querySelector('#editCity');
 let editBirthday = document.querySelector('#editBirthdate');
 
-const getEditStudent = async (id) => {
-  const inputs = modalEditStudent.querySelectorAll('input');
+const getEditStudent = async (id) => {const inputs = modalEditStudent.querySelectorAll('input');
     inputs.forEach(input => {
       input.value = '';
     });
@@ -160,7 +209,18 @@ editStudent.addEventListener('click', async (e) => {
     });
     modalBootStrapEditStudent.hide();
     studentToastSpan.innerText = 'Student Updated Successfully';
-    getStudens();
+    const studentObj = {
+      Birthdate: birthday,
+      City: city,
+      Country: country,
+      Email: email,
+      FirstName: fName,
+      LastName: lName,
+      created_at: "",
+      id: studentId
+    };
+    // getStudens();
+    //editStudentRealTime(studentObj);
     editOrDeleteToast.show();
   } else{
     alert('error while trying to edit the student');
@@ -169,6 +229,29 @@ editStudent.addEventListener('click', async (e) => {
   // editStudent.setAttribute('disabled', false);
   editStudent.removeAttribute('disabled');
 });
+
+const editStudentInList = async (student) => {
+  const studentFirstNameTD = document.querySelector(`td[data-firstname="${student.id}"]`);
+  const studentLastNameTD = document.querySelector(`td[data-lastname="${student.id}"]`);
+  const studentEmailTD = document.querySelector(`td[data-email="${student.id}"]`);
+  const studentCountryTD = document.querySelector(`td[data-country="${student.id}"]`);
+  const studentCityTD = document.querySelector(`td[data-city="${student.id}"]`);
+  const studentBirthdateTD = document.querySelector(`td[data-birthdate="${student.id}"]`);
+
+  studentFirstNameTD.innerHTML = student.FirstName;
+  studentLastNameTD.innerHTML = student.LastName;
+  studentEmailTD.innerHTML = student.Email;
+  studentCountryTD.innerHTML = student.Country;
+  studentCityTD.innerHTML = student.City;
+  studentBirthdateTD.innerHTML = student.Birthdate;
+
+  // for(let i = 0; i < studentTR.children.length - 1; i++){
+  //   const studentTD = studentTR.children[i];
+  //   console.log('innerHTML' , studentTD.innerHTML);
+  //   console.log(`student[${i}] `, Object.values(student)[i]);
+  //   console.log('entries: ', Object.entries(student)[i]);
+  // }
+}
 
 let deleteStudentId = document.getElementById('spanDeleteStudentId');
 
@@ -189,7 +272,8 @@ deleteStudent.addEventListener('click', async (e) => {
 
   if(deleteRes.error === null){
     modalBootStrapDeleteStudent.hide();
-    getStudens();
+    // getStudens();
+    removeStudentFromList(studId);
     studentToastSpan.innerText = 'Student Deleted Successfully';
     editOrDeleteToast.show();
   }else{
@@ -198,3 +282,8 @@ deleteStudent.addEventListener('click', async (e) => {
   deleteStudent.innerHTML = 'Delete';
   deleteStudent.removeAttribute('disabled');
 });
+
+const removeStudentFromList = async (studId) => {
+  const studentTR = document.querySelector(`tr[data-id="${studId}"]`);
+  studentTR.remove();
+}
