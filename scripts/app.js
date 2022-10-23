@@ -23,11 +23,11 @@ const getRealtimeChanges = async() => {
     { event: '*', schema: 'public', table: 'Student' },
     (payload) => {
       if(payload.errors === null){
-        console.log('payload: ', payload);
+        // console.log('payload: ', payload);
         if(payload.eventType === "INSERT"){
           addStudent(payload.new);
         }else if(payload.eventType === "UPDATE"){
-          editStudentRealTime(payload.new);
+          editStudentInList(payload.new);
         }else{
           removeStudentFromList(payload.old.id);
         }
@@ -78,28 +78,9 @@ const getStudens = async () => {
 
   if(studentsResult.status === 200 && studentsResult.data.length > 0 && studentsResult.error === null){
     loading.innerText = '';
-    // let orderNr = 1;
+    
     studentsResult.data.forEach(student => {
-      tr = `<tr data-id="${student.id}">
-      <td>${student.id}</td>
-      <td data-firstname="${student.id}">${student.FirstName}</td>
-      <td data-lastname="${student.id}">${student.LastName}</td>
-      <td data-email="${student.id}">${student.Email}</td>
-      <td data-country="${student.id}">${student.Country}</td>
-      <td data-city="${student.id}">${student.City}</td>
-      <td data-birthdate="${student.id}">${student.Birthdate}</td>
-      <td><button class="btn btn-primary" 
-                  data-bs-toggle="modal" 
-                  data-bs-target="#editStudentModal"
-                  onclick='getEditStudent(${student.id})'>Edit</button>
-          <button class="btn btn-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteStudentModal"
-                  onclick='getDeleteStudent(${student.id})'>Delete</button></td>
-      </tr>`
-
-      tabBody.innerHTML += tr;
-      // orderNr++;
+      addStudent(student);
     });
   } else{
     loading.innerText = 'No students registered';
@@ -139,7 +120,7 @@ saveStudent.addEventListener('click', async (e) => {
     // closeModal.click();
 
     modalBootStrapCreateStudent.hide();
-    getStudens();
+    // getStudens();
   } else{
     alert('error while trying to save student: ');
   }
@@ -244,13 +225,6 @@ const editStudentInList = async (student) => {
   studentCountryTD.innerHTML = student.Country;
   studentCityTD.innerHTML = student.City;
   studentBirthdateTD.innerHTML = student.Birthdate;
-
-  // for(let i = 0; i < studentTR.children.length - 1; i++){
-  //   const studentTD = studentTR.children[i];
-  //   console.log('innerHTML' , studentTD.innerHTML);
-  //   console.log(`student[${i}] `, Object.values(student)[i]);
-  //   console.log('entries: ', Object.entries(student)[i]);
-  // }
 }
 
 let deleteStudentId = document.getElementById('spanDeleteStudentId');
@@ -273,7 +247,7 @@ deleteStudent.addEventListener('click', async (e) => {
   if(deleteRes.error === null){
     modalBootStrapDeleteStudent.hide();
     // getStudens();
-    removeStudentFromList(studId);
+    //removeStudentFromList(studId);
     studentToastSpan.innerText = 'Student Deleted Successfully';
     editOrDeleteToast.show();
   }else{
